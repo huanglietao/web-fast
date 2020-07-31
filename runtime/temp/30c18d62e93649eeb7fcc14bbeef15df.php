@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:77:"D:\wnmp\nginx\html\web-fast\public/../application/index\view\index\index.html";i:1596185241;}*/ ?>
 <!DOCTYPE html>
 <html>
 
@@ -9,11 +10,11 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>{$site.name}</title>
-        <link rel="shortcut icon" href="__CDN__/assets/img/favicon.ico" />
+        <title><?php echo $site['name']; ?></title>
+        <link rel="shortcut icon" href="/assets/img/favicon.ico" />
         <!-- Bootstrap Core CSS -->
         <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-        <link href="__CDN__/assets/css/index.css" rel="stylesheet">
+        <link href="/assets/css/index.css" rel="stylesheet">
 
         <!-- Plugin CSS -->
         <link href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -34,13 +35,13 @@
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-menu">
                         <span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i>
                     </button>
-                    <a class="navbar-brand page-scroll" href="#page-top">{$site.name}</a>
+                    <a class="navbar-brand page-scroll" href="#page-top"><?php echo $site['name']; ?></a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="navbar-collapse-menu">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{:url('/')}">{:__('Home')}</a></li>
-                        <li><a href="{:url('admin/index/login')}" target="_blank">{:__('Member center')}11</a></li>
+                        <li><a href="<?php echo url('/'); ?>"><?php echo __('Home'); ?></a></li>
+                        <li><a href="<?php echo url('admin/index/login'); ?>" target="_blank"><?php echo __('Member center'); ?>11</a></li>
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
@@ -54,7 +55,7 @@
                     <div class="col-sm-12">
                         <div class="header-content">
                             <div class="header-content-inner">
-                                <h1>{$site.name}</h1>
+                                <h1><?php echo $site['name']; ?></h1>
                             </div>
                         </div>
                     </div>
