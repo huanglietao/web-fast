@@ -21,6 +21,7 @@ class Index extends Backend
 
     public function _initialize()
     {
+
         parent::_initialize();
         //移除HTML标签
         $this->request->filter('trim,strip_tags,htmlspecialchars');

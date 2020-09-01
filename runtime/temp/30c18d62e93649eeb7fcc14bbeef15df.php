@@ -1,73 +1,283 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:77:"D:\wnmp\nginx\html\web-fast\public/../application/index\view\index\index.html";i:1596185241;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:77:"D:\wnmp\nginx\html\web-fast\public/../application/index\view\index\index.html";i:1598954296;}*/ ?>
 <!DOCTYPE html>
-<html>
+<!-- saved from url=(0049)http://www.jq22.com/demo/html5Canvas201711011012/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <head>
+        <title>humanyr</title>
+        <style>
+            html,body {
+                margin:0;
+                overflow:hidden;
+                width:100%;
+                height:100%;
+            /*    cursor:none;*/
+                background:black;
+                background:linear-gradient(to bottom,#000000 0%,#5788fe 100%);
+            }
+            .filter {
+                width:100%;
+                height:100%;
+                position:absolute;
+                top:0;
+                left:0;
+                background:#fe5757;
+                animation:colorChange 30s ease-in-out infinite;
+                animation-fill-mode:both;
+                mix-blend-mode:overlay;
+            }
+            @keyframes colorChange {
+                0%,100% {
+                    opacity:0;
+                }
+                50% {
+                    opacity:.9;
+                }
+            }.landscape {
+                 position:absolute;
+                 bottom:0px;
+                 left:0;
+                 width:100%;
+                 height:100%;
+                 background-image:url('/assets/img/index_background.png');
+                 background-size:1000px 250px;
+                 background-repeat:repeat-x;
+                 background-position:center bottom;
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title><?php echo $site['name']; ?></title>
-        <link rel="shortcut icon" href="/assets/img/favicon.ico" />
-        <!-- Bootstrap Core CSS -->
-        <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/assets/css/index.css" rel="stylesheet">
-
-        <!-- Plugin CSS -->
-        <link href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://cdn.staticfile.org/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
-
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-            <script src="https://cdn.staticfile.org/html5shiv/3.7.3/html5shiv.min.js"></script>
-            <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+             }
+            .note{
+                z-index: 9999999;
+                position: fixed;
+                color: #ffffff;
+                left: 46%;
+                top: 43%;
+                cursor: pointer;
+            }
+        </style>
     </head>
+    <body>
+    <div class="landscape"></div>
+    <div class="note">
+        <h1 class="note_span">网站建设中...</h1>
+    </div>
+    <div class="filter">
+    </div>
+    <canvas id="canvas"></canvas>
 
-    <body id="page-top">
+    <script src="/assets/js/jquery-3.3.1.min.js"></script>
+    <script src="/assets/libs/fastadmin-layer/dist/layer.js"></script>
 
-        <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-menu">
-                        <span class="sr-only">Toggle navigation</span><i class="fa fa-bars"></i>
-                    </button>
-                    <a class="navbar-brand page-scroll" href="#page-top"><?php echo $site['name']; ?></a>
-                </div>
+    <script>
+        function Star(id, x, y){
+            this.id = id;
+            this.x = x;
+            this.y = y;
+            this.r = Math.floor(Math.random()*2)+1;
+            var alpha = (Math.floor(Math.random()*10)+1)/10/2;
+            this.color = "rgba(255,255,255,"+alpha+")";
+        }
 
-                <div class="collapse navbar-collapse" id="navbar-collapse-menu">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="<?php echo url('/'); ?>"><?php echo __('Home'); ?></a></li>
-                        <li><a href="<?php echo url('admin/index/login'); ?>" target="_blank"><?php echo __('Member center'); ?>11</a></li>
-                    </ul>
-                </div>
-                <!-- /.navbar-collapse -->
-            </div>
-            <!-- /.container-fluid -->
-        </nav>
+        Star.prototype.draw = function() {
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = this.r * 2;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+            ctx.closePath();
+            ctx.fill();
+        }
 
-        <header>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="header-content">
-                            <div class="header-content-inner">
-                                <h1><?php echo $site['name']; ?></h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+        Star.prototype.move = function() {
+            this.y -= .15;
+            if (this.y <= -10) this.y = HEIGHT + 10;
+            this.draw();
+        }
 
-        <!-- jQuery -->
-        <script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+        Star.prototype.die = function() {
+            stars[this.id] = null;
+            delete stars[this.id];
+        }
 
-        <!-- Bootstrap Core JavaScript -->
-        <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    </body>
 
-</html>
+        function Dot(id, x, y, r) {
+            this.id = id;
+            this.x = x;
+            this.y = y;
+            this.r = Math.floor(Math.random()*5)+1;
+            this.maxLinks = 2;
+            this.speed = .5;
+            this.a = .5;
+            this.aReduction = .005;
+            this.color = "rgba(255,255,255,"+this.a+")";
+            this.linkColor = "rgba(255,255,255,"+this.a/4+")";
+
+            this.dir = Math.floor(Math.random()*140)+200;
+        }
+
+        Dot.prototype.draw = function() {
+            ctx.fillStyle = this.color;
+            ctx.shadowBlur = this.r * 2;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        Dot.prototype.link = function() {
+            if (this.id == 0) return;
+            var previousDot1 = getPreviousDot(this.id, 1);
+            var previousDot2 = getPreviousDot(this.id, 2);
+            var previousDot3 = getPreviousDot(this.id, 3);
+            if (!previousDot1) return;
+            ctx.strokeStyle = this.linkColor;
+            ctx.moveTo(previousDot1.x, previousDot1.y);
+            ctx.beginPath();
+            ctx.lineTo(this.x, this.y);
+            if (previousDot2 != false) ctx.lineTo(previousDot2.x, previousDot2.y);
+            if (previousDot3 != false) ctx.lineTo(previousDot3.x, previousDot3.y);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        function getPreviousDot(id, stepback) {
+            if (id == 0 || id - stepback < 0) return false;
+            if (typeof dots[id - stepback] != "undefined") return dots[id - stepback];
+            else return false;//getPreviousDot(id - stepback);
+        }
+
+        Dot.prototype.move = function() {
+            this.a -= this.aReduction;
+            if (this.a <= 0) {
+                this.die();
+                return
+            }
+            this.color = "rgba(255,255,255,"+this.a+")";
+            this.linkColor = "rgba(255,255,255,"+this.a/4+")";
+            this.x = this.x + Math.cos(degToRad(this.dir))*this.speed,
+                this.y = this.y + Math.sin(degToRad(this.dir))*this.speed;
+
+            this.draw();
+            this.link();
+        }
+
+        Dot.prototype.die = function() {
+            dots[this.id] = null;
+            delete dots[this.id];
+        }
+
+
+        var canvas  = document.getElementById('canvas'),
+            ctx = canvas.getContext('2d'),
+            WIDTH,
+            HEIGHT,
+            mouseMoving = false,
+            mouseMoveChecker,
+            mouseX,
+            mouseY,
+            stars = [],
+            initStarsPopulation = 80,
+            dots = [],
+            dotsMinDist = 2,
+            maxDistFromCursor = 50;
+
+        setCanvasSize();
+        init();
+
+        function setCanvasSize() {
+            WIDTH = document.documentElement.clientWidth,
+                HEIGHT = document.documentElement.clientHeight;
+
+            canvas.setAttribute("width", WIDTH);
+            canvas.setAttribute("height", HEIGHT);
+        }
+
+        function init() {
+            ctx.strokeStyle = "white";
+            ctx.shadowColor = "white";
+            for (var i = 0; i < initStarsPopulation; i++) {
+                stars[i] = new Star(i, Math.floor(Math.random()*WIDTH), Math.floor(Math.random()*HEIGHT));
+                //stars[i].draw();
+            }
+            ctx.shadowBlur = 0;
+            animate();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+            for (var i in stars) {
+                stars[i].move();
+            }
+            for (var i in dots) {
+                dots[i].move();
+            }
+            drawIfMouseMoving();
+            requestAnimationFrame(animate);
+        }
+
+        window.onmousemove = function(e){
+            mouseMoving = true;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            clearInterval(mouseMoveChecker);
+            mouseMoveChecker = setTimeout(function() {
+                mouseMoving = false;
+            }, 100);
+        }
+
+
+        function drawIfMouseMoving(){
+            if (!mouseMoving) return;
+
+            if (dots.length == 0) {
+                dots[0] = new Dot(0, mouseX, mouseY);
+                dots[0].draw();
+                return;
+            }
+
+            var previousDot = getPreviousDot(dots.length, 1);
+            var prevX = previousDot.x;
+            var prevY = previousDot.y;
+
+            var diffX = Math.abs(prevX - mouseX);
+            var diffY = Math.abs(prevY - mouseY);
+
+            if (diffX < dotsMinDist || diffY < dotsMinDist) return;
+
+            var xVariation = Math.random() > .5 ? -1 : 1;
+            xVariation = xVariation*Math.floor(Math.random()*maxDistFromCursor)+1;
+            var yVariation = Math.random() > .5 ? -1 : 1;
+            yVariation = yVariation*Math.floor(Math.random()*maxDistFromCursor)+1;
+            dots[dots.length] = new Dot(dots.length, mouseX+xVariation, mouseY+yVariation);
+            dots[dots.length-1].draw();
+            dots[dots.length-1].link();
+        }
+        //setInterval(drawIfMouseMoving, 17);
+
+        function degToRad(deg) {
+            return deg * (Math.PI / 180);
+        }
+
+       /* $(".note").mouseenter(function () {
+            setTimeout(function(){
+                layer.tips('有话对我说？点击试试', '.note_span');
+            },1500)
+        });
+        $(".note").click(function () {
+            layer.open({
+                type: 2,
+                title:'留言板',
+                area: ['70%' ,'60%'], //宽高
+                content: '/index/index/remark',
+                cancel: function(index){
+                    console.log(32132);
+
+                    //右上角关闭回调
+                    layer.close(index);
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        })*/
+
+    </script>
+
+
+    </body></html>
