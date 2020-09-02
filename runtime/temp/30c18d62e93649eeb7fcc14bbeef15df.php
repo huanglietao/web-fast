@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:77:"D:\wnmp\nginx\html\web-fast\public/../application/index\view\index\index.html";i:1598954296;}*/ ?>
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:77:"D:\wnmp\nginx\html\web-fast\public/../application/index\view\index\index.html";i:1599028863;}*/ ?>
 <!DOCTYPE html>
 <!-- saved from url=(0049)http://www.jq22.com/demo/html5Canvas201711011012/ -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -48,8 +48,14 @@
                 z-index: 9999999;
                 position: fixed;
                 color: #ffffff;
-                left: 46%;
-                top: 43%;
+                width: 100%;
+                height: 100vh;
+                text-align: center;
+                line-height: 100vh;
+
+            }
+            .note_span{
+                display: inline;
                 cursor: pointer;
             }
         </style>
@@ -64,7 +70,7 @@
     <canvas id="canvas"></canvas>
 
     <script src="/assets/js/jquery-3.3.1.min.js"></script>
-    <script src="/assets/libs/fastadmin-layer/dist/layer.js"></script>
+    <script src="/assets/libs/layer/src/layer.js"></script>
 
     <script>
         function Star(id, x, y){
@@ -256,12 +262,12 @@
             return deg * (Math.PI / 180);
         }
 
-       /* $(".note").mouseenter(function () {
+        $(".note_span").mouseenter(function () {
             setTimeout(function(){
                 layer.tips('有话对我说？点击试试', '.note_span');
             },1500)
         });
-        $(".note").click(function () {
+        $(".note_span").click(function () {
             layer.open({
                 type: 2,
                 title:'留言板',
@@ -275,7 +281,7 @@
                     //return false 开启该代码可禁止点击该按钮关闭
                 }
             });
-        })*/
+        })
 
     </script>
 
