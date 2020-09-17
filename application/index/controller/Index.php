@@ -4,6 +4,7 @@ namespace app\index\controller;
 
 use app\common\controller\Frontend;
 use app\common\library\Curl;
+use think\Request;
 
 class Index extends Frontend
 {
@@ -12,10 +13,15 @@ class Index extends Frontend
     protected $noNeedRight = '*';
     protected $layout = '';
 
-    public function index()
+    public function __construct(Request $request = null)
     {
         //获取查看者ip存进数据库
         $this->saveIp();
+        parent::__construct($request);
+    }
+
+    public function index()
+    {
         return $this->view->fetch();
     }
 
@@ -70,7 +76,6 @@ class Index extends Frontend
     //存储ip地址
     public function saveIp()
     {
-
         $ip = $this->getClientIp();
         //若该ip地址已在ip库则访问次数加1
         $exist = db('ip_repository')->where(['ip' => $ip])->find();
@@ -79,11 +84,21 @@ class Index extends Frontend
             //更新数据，次数加1
             $data['time'] = ++$exist['time'];
             $data['updatetime'] = time();
+            //判断登录端
+            $agentArr = explode('||||',$exist['user_agent']);
+            if (!in_array($_SERVER['HTTP_USER_AGENT'],$agentArr)){
+                $agentArr[] = $_SERVER['HTTP_USER_AGENT'];
+            }
+            if (!empty($agentArr)){
+                $data['user_agent'] = implode('||||',$agentArr);
+                $data['user_agent'] = ltrim($data['user_agent'],'||||');
+            }
             db('ip_repository')->where(['id' => $exist['id']])->update($data);
         }else{
             //添加数据，次数加1
             $data['ip'] = $ip;
             $data['time'] = 1;
+            $data['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
             $data['createtime'] = time();
             $data['updatetime'] = time();
             db('ip_repository')->insert($data);
