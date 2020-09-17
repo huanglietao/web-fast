@@ -19,6 +19,10 @@ class Index extends Frontend
         return $this->view->fetch();
     }
 
+    public function xian()
+    {
+        return $this->view->fetch();
+    }
 
 
 
