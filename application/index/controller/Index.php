@@ -75,6 +75,7 @@ class Index extends Frontend
 
     }
 
+    
     //存储ip地址
     public function saveIp()
     {
