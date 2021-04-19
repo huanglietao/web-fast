@@ -27,7 +27,6 @@ class Index extends Frontend
 
     public function xian()
     {
-        var_dump("略");die;
         return $this->view->fetch();
     }
 
