@@ -32,8 +32,7 @@ class Index extends Frontend
         return $this->view->fetch();
     }
 
-
-
+    
     public function getClientIp()
     {
 
@@ -75,7 +74,7 @@ class Index extends Frontend
 
     }
 
-    
+
     //存储ip地址
     public function saveIp()
     {
