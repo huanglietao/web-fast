@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>留言板</title>
+</head>
+<style>
+    body{
+        width: 100%;
+        height: 100vh;
+        background-image: url('/assets/img/1.jpg');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 100% 100%;
+        margin: 0;
+        padding: 0;
+    }
+    #box{
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        flex-flow: wrap;
+    }
+    #box #btn {
+        display: block;
+        width: 150px;
+        text-align: center;
+        text-decoration: none;
+        color: #4c4c4c;
+        font-size: 20px;
+        background: #fff;
+        border-radius: 5px;
+        padding: 5px;
+        margin: 10px;
+        cursor: pointer;
+    }
+    #uls {
+        margin: 20px 10px 0;
+        background: #fff;
+        border-radius: 10px auto 0;
+        width: 100%;
+    }
+    ul, li {
+        list-style: none;
+    }
+    #uls li {
+        padding: 10px 5px;
+        border-bottom: 1px dashed #eee;
+    }
+    #uls li p {
+        padding: 10px;
+        color: #aaa;
+        font-size: 14px;
+    }
+    .delet {
+        float: right;
+        text-decoration: none;
+        color: #ccc;
+        margin-right: 20px;
+        font-size: 20px;
+    }
+    .main{
+        width: 80%;
+        margin: 0 auto;
+        /*border: 1px red solid;*/
+        height: 100vh;
+    }
+    .item{
+        width: 90%;
+        height: 100px;
+        border: 1px red solid;
+    }
+    .x_text{
+        align-items: center;
+    }
+    .remark_top{
+        text-align: center;
+        border-bottom: none !important;
+    }
+    .c_time{
+        float: right;
+        padding-right: 10px;
+    }
+    .top{
+        color: #2223218a;
+        padding: 2px 5px;
+    }
+</style>
+<body>
+<div id="box">
+    <a id="btn" class="note_span">点击留言</a>
+    <ul id="uls">
+        <li class="remark_top">
+            <span class="loading x_text"> 加载中... </span>
+            <span class="no-data x_text" style="display: none"> 暂无数据 </span>
+        </li>
+
+        <li class="remark-item">
+
+            <div class="top">
+                <span class="username">致橡树</span>
+                <span class="c_time">2021-4-19 14:00:00</span>
+                </div>
+            <p>我如果爱你——绝不像攀援的凌霄花，借你的高枝炫耀自己；我如果爱你——绝不学痴情的鸟儿，为绿荫重复单调的歌曲；也不止像泉源，常年送来清凉的慰藉；也不止像险峰，增加你的高度，衬托你的威仪。甚至日光。甚至春雨。</p>
+        </li>
+    </ul>
+</div>
+
+</body>
+<script src="/assets/js/jquery-3.3.1.min.js"></script>
+<script src="/assets/libs/layer/src/layer.js"></script>
+
+<script>
+
+    getlist();
+    $(".note_span").mouseenter(function () {
+        setTimeout(function(){
+            layer.tips('有话对我说？点击试试', '.note_span');
+        },1500)
+    });
+    $(".note_span").click(function () {
+        layer.open({
+            type: 2,
+            title:'留言板',
+            area: ['70%' ,'60%'], //宽高
+            content: '/index/index/remark',
+            cancel: function(index){
+                //右上角关闭回调
+                layer.close(index);
+                //return false 开启该代码可禁止点击该按钮关闭
+            }
+        });
+    })
+
+    function getlist() {
+        $(".loading").show();
+        $(".no-data").hide();
+        $(".remark-item").remove();
+        $.ajax({
+            url : '/index/index/getRemark',
+            type : 'POST',
+            dataType : 'JSON',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+            },
+            success : function (data) {
+                if (data.length!=0)
+                {
+                    $(".loading").hide();
+                    $(".no-data").hide();
+                    $.each(data,function(index,value){
+                        $html = '<li class="remark-item"><div class="top"><span class="username">'+value.username+'</span><span class="c_time">'+value.time+'</span></div> <p>'+value.remark+'</p> </li>';
+                        $("#uls").append($html);
+                    });
+                }else{
+                    //数据为空
+                    $(".loading").hide();
+                    $(".no-data").show();
+                }
+            }
+        });
+    }
+
+
+</script>
+</html>

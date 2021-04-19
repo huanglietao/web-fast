@@ -4,6 +4,7 @@ namespace app\index\controller;
 
 use app\common\controller\Frontend;
 use app\common\library\Curl;
+use think\Db;
 use think\Request;
 
 class Index extends Frontend
@@ -27,7 +28,7 @@ class Index extends Frontend
 
     public function xian()
     {
-        var_dump("略");die;
+        var_dump("看看看，看什么看，再看打你");die;
         return $this->view->fetch();
     }
 
@@ -156,5 +157,22 @@ class Index extends Frontend
 
     }
 
+
+    public function messageBoard()
+    {
+        return $this->view->fetch();
+    }
+
+    //获取留言内容
+    public function getRemark()
+    {
+        $list = Db::name('stranger_note')->field('id,createtime,username,remark')->order('createtime desc')->select();
+        foreach ($list as $k => $v)
+        {
+            //转换时间戳
+            $list[$k]['time'] = date('Y-m-d H:i:s',$v['createtime']);
+        }
+        return $list;
+    }
 
 }
