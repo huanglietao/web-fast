@@ -29,7 +29,7 @@ class Index extends Frontend
     public function xian()
     {
 
-        var_dump("看看看，看什么看，再看打你");die;
+        var_dump("看看看，看什么看");die;
         return $this->view->fetch();
     }
 
