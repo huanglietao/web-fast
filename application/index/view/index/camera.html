@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>浏览器摄像头拍照并裁剪上传</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            outline: none;
+            border: none;
+        }
+
+        .flex-row-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+        }
+
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main {
+            width: 1000px;
+            margin: 100px auto;
+        }
+
+        .main__camera,
+        .main__upload {
+            height: 530px;
+            background: #FFFFFF;
+            box-shadow: 4px 4px 18px 0px rgba(0, 0, 0, 0.08);
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .main__camera {
+            width: 358px;
+            margin-right: 20px;
+        }
+
+        .main__upload {
+            width: 538px;
+        }
+
+        .main__camera-power {
+            width: 288px;
+            height: 160px;
+            background: rgba(41, 123, 255, 0.06);
+            border-radius: 18px;
+            border: 1px dashed #297BFF;
+            cursor: pointer;
+            flex-flow: column nowrap;
+        }
+
+        .main__camera-confirm {
+            width: 288px;
+            height: 48px;
+            background: #297BFF;
+            border-radius: 14px;
+            transition: .3s;
+            cursor: pointer;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        .main__camera-confirm--img {
+            display: block;
+            width: 34px;
+            height: 34px;
+        }
+
+        .main__title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        .main__hint {
+            font-size: 13px;
+            color: #333333;
+            line-height: 18px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+        }
+
+        .main__camera-power--hint {
+            font-size: 13px;
+            font-weight: 400;
+            color: #297BFF;
+            margin-top: 10px;
+        }
+
+        .main__camera-power--span {
+            width: 48px;
+            height: 48px;
+        }
+
+        .main__camera-power--span img {
+            width: inherit;
+            height: inherit;
+            display: block;
+        }
+
+        .main__upload-left--top {
+            height: 288px;
+        }
+
+        .main__upload-btn--img {
+            width: 28px;
+            height: 28px;
+            display: block;
+        }
+
+        .main__upload-left {
+            width: 288px;
+            height: 288px;
+            position: relative;
+            margin-right: 30px;
+            border: 1px dashed #297BFF;
+            background: #fff;
+            border-radius: 18px;
+            background-repeat: no-repeat;
+            cursor: move;
+            overflow: hidden;
+        }
+
+        .main__upload-left--thumbBox {
+            width: 144px;
+            height: 144px;
+            border-radius: 144px;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgb(102, 102, 102);
+            background: none repeat scroll 0% 0% transparent;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .main__upload-left--spinner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            line-height: 288px;
+            color: #4A4a4a;
+            background: rgba(213, 211, 211, 0.7);
+        }
+
+        .main__upload-right {
+            width: 140px;
+            height: 288px;
+            display: flex;
+            align-items: center;
+            flex-flow: column;
+            font-size: 12px;
+            justify-content: center;
+        }
+
+        .main__upload-btn {
+            width: 48px;
+            height: 48px;
+            background: #297BFF;
+            border-radius: 14px;
+            cursor: pointer;
+            color: #FFFFFF;
+            transition: .3s;
+        }
+
+        .main__upload-btn:hover,
+        .main__camera-confirm:hover {
+            opacity: .7;
+        }
+
+        .main__upload-btn--confirm {
+            width: 172px;
+            background: #FFA929;
+            display: none;
+        }
+
+        .main__upload-btn--color {
+            width: 168px;
+            background-color: #FFA929;
+        }
+
+        .main__upload-left--btn {
+            margin-top: 30px;
+        }
+
+        .main__upload-left--btn > button + button {
+            margin-left: 10px;
+        }
+
+        .main__lager-photo,
+        .main__small-photo,
+        .main__mini-photo {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            box-shadow: 0px 0px 12px #7E7E7E;
+            display: block;
+        }
+
+        .main__small-photo {
+            width: 58px;
+            height: 58px;
+            margin-top: 10px;
+        }
+
+        .main__mini-photo {
+            width: 46px;
+            height: 46px;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<main class="main flex-row-wrap">
+    <section class="main__camera">
+        <h2 class="main__title">从本地摄像头获取</h2>
+        <p class="main__hint">请确保当前设备的摄像头处于可用状态</p>
+
+        <div id="open-power" class="main__camera-power flex-center">
+					<span class="main__camera-power--span">
+						<img src="/assets/img/camera/camera.png" alt="power" />
+					</span>
+            <p class="main__camera-power--hint">请开启摄像头调用权限</p>
+        </div>
+
+        <button id="main__confirm" class="main__camera-confirm flex-center">
+            <img class="main__camera-confirm--img" src="/assets/img/camera/photo.png" alt="photograph">
+        </button>
+    </section>
+
+    <section class="main__upload">
+        <h2 class="main__title">头像裁剪</h2>
+        <p class="main__hint">将头像调整为你喜欢的样子就可以上传啦</p>
+
+        <div class="flex-row-wrap">
+            <div id="main__photo" class="main__upload-left">
+                <div class="main__upload-left--thumbBox"></div>
+                <div class="main__upload-left--spinner">Loading...</div>
+            </div>
+
+            <div class="main__upload-right">
+            </div>
+        </div>
+
+        <div class="main__upload-left--btn flex-row-wrap">
+            <button id="main__lessen" class="main__upload-btn flex-center">
+                <!-- 缩小 -->
+                <img class="main__upload-btn--img" src="/assets/img/camera/small.png" alt="small">
+            </button>
+
+            <button id="main__boost" class="main__upload-btn flex-center">
+                <!-- 放大 -->
+                <img class="main__upload-btn--img" src="/assets/img/camera/big.png" alt="big">
+            </button>
+
+            <button id="main__rop" class="main__upload-btn main__upload-btn--color flex-center">裁剪</button>
+            <button id="main__submit" class="main__upload-btn main__upload-btn--confirm flex-center">完成上传</button>
+        </div>
+    </section>
+</main>
+</body>
+
+<script src="/assets/js/jquery-3.3.1.min.js"></script>
+<script src="/assets/libs/layer/src/layer.js"></script>
+<script src="/assets/libs/camera/webcam.js"></script>
+<script src="/assets/libs/camera/cropbox.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+        // 完成上传   图片为base64
+        $("#main__submit").click(function () {
+            var ahis = $(this);
+            console.log(cropper.getDataURL());
+            ahis.hide();
+            // $.post("/url", {data: cropper.getDataURL()}, function(data) {
+            ahis.show();
+            ahis.html("OK");
+            // });
+        })
+
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+        Webcam.attach('#open-power');
+
+        const options = {
+            thumbBox: '.main__upload-left--thumbBox',
+            spinner: '.main__upload-left--spinner',
+            imgSrc: ''
+        }
+        let cropper = null;
+
+        $("#main__confirm").click(function () {
+            Webcam.freeze();
+            Webcam.snap(function(data_uri) {
+                options.imgSrc = data_uri;
+                //注册裁剪组件
+                cropper = $('#main__photo').cropbox(options);
+                var onloadFn = cropper.image.onload;
+                cropper.image.onload = function() {
+                    onloadFn();
+                    //初始化头像
+                    imgHtml();
+                }
+            });
+        })
+
+        $("#main__rop").on('click', function() {
+            imgHtml();
+        })
+
+        $('#main__boost').on('click', function() {
+            cropper.zoomIn();
+        })
+
+        $('#main__lessen').on('click', function() {
+            cropper.zoomOut();
+        })
+
+        function imgHtml() {
+            var img = cropper.getDataURL();
+            var imgObj = $('.main__upload-right');
+            imgObj.html('');
+            imgObj.append('<img class="main__lager-photo" src="' + img +'" align="absmiddle"><p>180px*180px</p>');
+            imgObj.append('<img class="main__small-photo" src="' + img +'" align="absmiddle"><p>128px*128px</p>');
+            imgObj.append('<img class="main__mini-photo" src="' + img +'" align="absmiddle"><p>64px*64px</p>');
+            $('#main__submit').show();
+        }
+    });
+</script>
+</html>

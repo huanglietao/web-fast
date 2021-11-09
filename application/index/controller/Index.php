@@ -176,4 +176,9 @@ class Index extends Frontend
         return $list;
     }
 
+    //摄像头测试
+    public function camera(){
+        return $this->view->fetch();
+    }
+
 }
