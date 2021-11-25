@@ -180,9 +180,9 @@ class Index extends Frontend
     public function camera(){
         return $this->view->fetch();
     }
-
-    //摄像头测试
+    //摄像头测试2
     public function camerav2(){
-        return $this->view->fetch();
+    	return $this->view->fetch();
     }
+
 }
