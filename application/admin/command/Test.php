@@ -23,6 +23,7 @@ class Test extends Command
          $data = [
              'remark' => "现在是".date("Y-m-d H:i:s"),
          ];
-         db('test')->insert($data);
+         $newId = db('test')->insertGetId($data);
+         echo $newId;
      }
 }
