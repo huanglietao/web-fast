@@ -20,10 +20,11 @@ class Test extends Command
      }
      protected function execute(Input $input, Output $output)
      {
+         file_put_contents(APP_PATH."/testHlt.log",date("Y-m-d H:i:s").":  开始测试;"."\r\n",FILE_APPEND);
          $data = [
              'remark' => "现在是".date("Y-m-d H:i:s"),
          ];
          $newId = db('test')->insertGetId($data);
-         echo $newId;
+         file_put_contents(APP_PATH."/testHlt.log",date("Y-m-d H:i:s").": 插入id为：".$newId." 结束测试;"."\r\n",FILE_APPEND);
      }
 }
