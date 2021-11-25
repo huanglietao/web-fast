@@ -22,7 +22,7 @@ class TestForSh extends Command
      {
          file_put_contents(APP_PATH."/testHlt.log",date("Y-m-d H:i:s").":  开始测试;"."\r\n",FILE_APPEND);
          $data = [
-             'remark' => "现在是".date("Y-m-d H:i:s"),
+             'remark' => "新方式(sh):现在是".date("Y-m-d H:i:s"),
          ];
          $newId = db('test')->insertGetId($data);
          file_put_contents(APP_PATH."/testHlt.log",date("Y-m-d H:i:s").": 插入id为：".$newId." 结束测试;"."\r\n",FILE_APPEND);
