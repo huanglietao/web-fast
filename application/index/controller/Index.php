@@ -23,7 +23,6 @@ class Index extends Frontend
 
     public function index()
     {
-        $this->crontabTest();
         return $this->view->fetch();
     }
 
